@@ -1,7 +1,6 @@
 package schauweg.smoothswapping.mixin;
 
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.ingame.CreativeInventoryScreen;
 import net.minecraft.client.gui.screen.ingame.HandledScreen;
 import net.minecraft.item.ItemStack;
@@ -17,7 +16,10 @@ import schauweg.smoothswapping.SmoothSwapping;
 import schauweg.smoothswapping.SwapStacks;
 import schauweg.smoothswapping.SwapUtil;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import static schauweg.smoothswapping.SmoothSwapping.*;
 import static schauweg.smoothswapping.SwapUtil.getCount;
@@ -30,7 +32,7 @@ public abstract class HandledScreenMixin {
     @Shadow
     @Final
     protected ScreenHandler handler;
-    private Screen currentScreen = null;
+    private ScreenHandler currentScreenHandler = null;
 
     @Inject(method = "render", at = @At("HEAD"))
     public void onRender(CallbackInfo cbi) {
@@ -48,7 +50,7 @@ public abstract class HandledScreenMixin {
 
         currentStacks = client.player.currentScreenHandler.getStacks();
 
-        Screen screen = client.currentScreen;
+        ScreenHandler screenHandler = client.player.currentScreenHandler;
 
         if (clickSwap) {
             clickSwap = false;
@@ -56,10 +58,10 @@ public abstract class HandledScreenMixin {
             return;
         }
 
-        if (currentScreen != screen) {
+        if (currentScreenHandler != screenHandler) {
             SmoothSwapping.swaps.clear();
             updateStacks(currentStacks, oldStacks);
-            currentScreen = screen;
+            currentScreenHandler = screenHandler;
             return;
         }
 
