@@ -37,7 +37,7 @@ public abstract class HandledScreenMixin {
     @Shadow
     protected int x, y;
 
-    private Screen currentScreen = null;
+    private ScreenHandler currentScreenHandler = null;
 
     @Inject(method = "render", at = @At("HEAD"))
     public void onRender(MatrixStack matrices, int mouseX, int mouseY, float delta, CallbackInfo cbi) {
@@ -72,7 +72,7 @@ public abstract class HandledScreenMixin {
             SmoothSwapping.currentCursorStackLock.unlock();
         }
 
-        Screen screen = client.currentScreen;
+        ScreenHandler screenHandler = client.player.currentScreenHandler;
 
         if (SmoothSwapping.clickSwap) {
             SmoothSwapping.clickSwap = false;
@@ -80,10 +80,10 @@ public abstract class HandledScreenMixin {
             return;
         }
 
-        if (currentScreen != screen) {
+        if (currentScreenHandler != screenHandler) {
             SmoothSwapping.swaps.clear();
             copyStacks(SmoothSwapping.currentStacks, SmoothSwapping.oldStacks);
-            currentScreen = screen;
+            currentScreenHandler = screenHandler;
             return;
         }
 
